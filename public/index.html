@@ -6,61 +6,138 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
 		/>
-		<title>Scramjet</title>
+		<title>LineWiser</title>
 
 		<link rel="shortcut icon" content="favicon.webp" />
-	
+
 		<script src="/scram/scramjet.all.js"></script>
 		<script src="/baremux/index.js"></script>
-		
-		<link rel="stylesheet" href="index.css" />
+
+		<link rel="stylesheet" href="index.css" id="sj-theme-link" />
+		<style id="sj-custom-theme"></style>
 		<script src="register-sw.js" defer></script>
 		<script src="search.js" defer></script>
 		<script src="index.js" defer></script>
 	</head>
 
 	<body>
-		<div title="Scramjet Logo" class="flex-center logo-wrapper header-center">
-			<img class="logo" src="sj.png" alt="Scramjet" />
-			<h1>Scramjet | MW</h1>
-		</div>
-		<div class="flex-center desc left-margin">
-			<p>
-				Scramjet is an experimental interception based web proxy designed to
-				evade internet censorship, bypass arbitrary web browser restrictions and
-				innovate web proxy technologies.
-			</p>
-		</div>
+		<header class="browser-header">
+			<div id="sj-tabs" class="tabs-container">
+				<div id="sj-tab-list" class="tab-list"></div>
+				<button id="sj-add-tab" class="add-tab-btn" title="New Tab">+</button>
+			</div>
 
-		<form id="sj-form" class="flex-center">
-			<input
-				id="sj-search-engine"
-				value="https://www.google.com/search?q=%s"
-				type="hidden"
-			/>
-			<input id="sj-address" type="text" placeholder="Search the web freely" />
-		</form>
-		<div class="desc left-margin">
-			<p id="sj-error"></p>
-			<pre id="sj-error-code"></pre>
-		</div>
-		<footer>
-			<div>
-				<a
-					title="The Mercury Workshop GitHub organization"
-					href="https://github.com/MercuryWorkshop"
-					>Mercury Workshop</a
+			<div class="nav-bar">
+				<form id="sj-nav-form" class="address-bar-form">
+					<input
+						id="sj-nav-address"
+						type="text"
+						placeholder="Search or enter address"
+						autocomplete="off"
+					/>
+				</form>
+
+				<button
+					id="lw-fullscreen-btn"
+					class="lw-icon-btn"
+					type="button"
+					title="Fullscreen (hides sidebar)"
+					aria-label="Fullscreen"
 				>
-				<a
-					title="The example demo app for Scramjet"
-					href="https://github.com/MercuryWorkshop/Scramjet-Demo"
-					>GitHub</a
+					⛶
+				</button>
+
+				<button
+					id="sj-home-btn"
+					class="lw-icon-btn"
+					type="button"
+					title="Home"
+					aria-label="Home"
 				>
-				<a title="License information" href="credits.html">Credits</a>
+					⌂
+				</button>
 			</div>
-			<div>
-				<span>Scramjet &copy; MW 2025</span>
+		</header>
+
+		<main id="sj-main">
+			<aside class="lw-sidebar" aria-label="Sidebar">
+				<div class="lw-side-top">
+					<div class="lw-side-brand" title="LineWiser">LW</div>
+				</div>
+
+				<nav class="lw-side-nav">
+					<a class="lw-side-btn lw-side-linkbtn" href="index.html" title="Home">⌂</a>
+					<a class="lw-side-btn lw-side-linkbtn" href="games.html" title="Games">🎮</a>
+					<a class="lw-side-btn lw-side-linkbtn" href="apps.html" title="Apps">▦</a>
+
+					<div class="lw-side-sep"></div>
+
+					<button class="lw-side-btn" type="button" data-lw-action="newtab" title="New Tab">
+						+
+					</button>
+				</nav>
+
+				<div class="lw-side-bottom">
+					<a class="lw-side-link" href="credits.html" title="Credits">Credits</a>
+				</div>
+			</aside>
+
+			<div class="lw-content">
+				<div id="sj-home">
+					<section class="lw-hero">
+						<h1 class="lw-title">LineWiser</h1>
+						<p class="lw-subtitle">Cleaner. Faster. Smarter.</p>
+
+						<form id="sj-form" class="lw-search">
+							<input
+								id="sj-search-engine"
+								value="https://www.google.com/search?q=%s"
+								type="hidden"
+							/>
+							<input
+								id="sj-address"
+								type="text"
+								placeholder="Search the web freely"
+								autocomplete="off"
+							/>
+							<button class="lw-search-btn" type="submit">Search</button>
+						</form>
+
+						<div class="lw-quick">
+							<button class="lw-chip" type="button" data-lw-url="https://google.com">
+								Google
+							</button>
+							<button class="lw-chip" type="button" data-lw-url="https://youtube.com">
+								YouTube
+							</button>
+							<button class="lw-chip" type="button" data-lw-url="https://wikipedia.org">
+								Wikipedia
+							</button>
+							<button class="lw-chip" type="button" data-lw-url="https://github.com">
+								GitHub
+							</button>
+						</div>
+
+						<div class="desc left-margin">
+							<p id="sj-error"></p>
+							<pre id="sj-error-code"></pre>
+						</div>
+					</section>
+				</div>
+
+				<div id="sj-frames-container"></div>
 			</div>
-		</footer>
+		</main>
+
+		<script>
+			// Quick links: fill search bar and reuse the existing submit handler
+			document.addEventListener("click", (e) => {
+				const btn = e.target.closest("[data-lw-url]");
+				if (!btn) return;
+				const input = document.getElementById("sj-address");
+				input.value = btn.getAttribute("data-lw-url");
+				document.getElementById("sj-form").requestSubmit();
+			});
+		</script>
 	</body>
 </html>

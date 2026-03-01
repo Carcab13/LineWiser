@@ -28,6 +28,18 @@
 			</div>
 
 			<div class="nav-bar">
+				<div class="nav-buttons">
+					<button id="sj-back" class="lw-icon-btn" title="Back" aria-label="Back">
+						←
+					</button>
+					<button id="sj-forward" class="lw-icon-btn" title="Forward" aria-label="Forward">
+						→
+					</button>
+					<button id="sj-reload" class="lw-icon-btn" title="Reload" aria-label="Reload">
+						↻
+					</button>
+				</div>
+
 				<form id="sj-nav-form" class="address-bar-form">
 					<input
 						id="sj-nav-address"
@@ -61,26 +73,61 @@
 
 		<main id="sj-main">
 			<aside class="lw-sidebar" aria-label="Sidebar">
-				<div class="lw-side-top">
-					<div class="lw-side-brand" title="LineWiser">LW</div>
-				</div>
+	<div class="lw-side-top">
+		<div class="lw-side-brand" title="LineWiser">LW</div>
 
-				<nav class="lw-side-nav">
-					<a class="lw-side-btn lw-side-linkbtn" href="index.html" title="Home">⌂</a>
-					<a class="lw-side-btn lw-side-linkbtn" href="games.html" title="Games">🎮</a>
-					<a class="lw-side-btn lw-side-linkbtn" href="apps.html" title="Apps">▦</a>
+		<button
+			id="lw-sidebar-toggle"
+			class="lw-side-toggle"
+			type="button"
+			title="Collapse sidebar"
+			aria-label="Collapse sidebar"
+		>
+			<svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+				<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+			</svg>
+		</button>
+	</div>
 
-					<div class="lw-side-sep"></div>
+	<nav class="lw-side-nav" aria-label="Primary">
+		<button class="lw-side-btn" type="button" data-lw-action="home" title="Home">
+			<span class="lw-side-icon" aria-hidden="true">
+				<!-- icon svg ... -->
+			</span>
+			<span class="lw-side-label">Home</span>
+		</button>
 
-					<button class="lw-side-btn" type="button" data-lw-action="newtab" title="New Tab">
-						+
-					</button>
-				</nav>
+		<button class="lw-side-btn" type="button" data-lw-tab-url="/games.html" title="Games">
+			<span class="lw-side-icon" aria-hidden="true">
+				<!-- icon svg ... -->
+			</span>
+			<span class="lw-side-label">Games</span>
+		</button>
 
-				<div class="lw-side-bottom">
-					<a class="lw-side-link" href="credits.html" title="Credits">Credits</a>
-				</div>
-			</aside>
+		<button class="lw-side-btn" type="button" data-lw-tab-url="/apps.html" title="Apps">
+			<span class="lw-side-icon" aria-hidden="true">
+				<!-- icon svg ... -->
+			</span>
+			<span class="lw-side-label">Apps</span>
+		</button>
+
+		<button class="lw-side-btn" type="button" data-lw-tab-url="/credits.html" title="Credits">
+			<span class="lw-side-icon" aria-hidden="true">
+				<!-- icon svg ... -->
+			</span>
+			<span class="lw-side-label">Credits</span>
+		</button>
+
+		<div class="lw-side-sep"></div>
+
+		<button class="lw-side-btn lw-side-btn--muted" type="button" data-lw-action="newtab" title="New Tab">
+			<span class="lw-side-icon" aria-hidden="true">
+				<!-- icon svg ... -->
+			</span>
+			<span class="lw-side-label">New tab</span>
+		</button>
+	</nav>
+</aside>
 
 			<div class="lw-content">
 				<div id="sj-home">
@@ -91,7 +138,7 @@
 						<form id="sj-form" class="lw-search">
 							<input
 								id="sj-search-engine"
-								value="https://www.google.com/search?q=%s"
+								value="https://www.google.com/search?q=%s&udm=2&cs=1"
 								type="hidden"
 							/>
 							<input

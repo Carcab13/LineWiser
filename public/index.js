@@ -23,6 +23,93 @@ const home = document.getElementById("sj-home");
 const tabsContainer = document.getElementById("sj-tabs");
 const tabList = document.getElementById("sj-tab-list");
 const addTabBtn = document.getElementById("sj-add-tab");
+const homeBtn = document.getElementById("sj-home-btn");
+const lwSidebarToggle = document.getElementById("lw-sidebar-toggle");
+
+// --- Sidebar collapse (remembered) ---
+const SIDEBAR_KEY = "lw.sidebarCollapsed";
+
+function setSidebarCollapsed(isCollapsed) {
+	document.documentElement.classList.toggle("lw-sidebar-collapsed", isCollapsed);
+	try {
+		localStorage.setItem(SIDEBAR_KEY, String(isCollapsed));
+	} catch {
+		// ignore
+	}
+}
+
+(function initSidebarState() {
+	try {
+		const saved = localStorage.getItem(SIDEBAR_KEY);
+		if (saved === "true") setSidebarCollapsed(true);
+	} catch {
+		// ignore
+	}
+})();
+
+lwSidebarToggle?.addEventListener("click", () => {
+	const next = !document.documentElement.classList.contains("lw-sidebar-collapsed");
+	setSidebarCollapsed(next);
+});
+
+// --- Sidebar actions ---
+document.addEventListener("click", async (e) => {
+	const actionEl = e.target.closest("[data-lw-action]");
+	if (!actionEl) return;
+
+	const action = actionEl.getAttribute("data-lw-action");
+
+	if (action === "home") {
+		// IMPORTANT: do NOT open index.html inside a tab (prevents “LineWiser in LineWiser”)
+		homeBtn?.click();
+		return;
+	}
+
+	if (action === "newtab") {
+		addTabBtn?.click();
+	}
+});
+
+// --- Open sidebar pages as tabs (games/apps/credits/etc) ---
+function normalizeAppUrl(rawUrl) {
+	return new URL(rawUrl, window.location.origin).toString();
+}
+
+function isAppShellUrl(urlString) {
+	// Treat "/" and "/index.html" as the app shell -> never open inside a tab
+	try {
+		const u = new URL(urlString);
+		return u.origin === window.location.origin && (u.pathname === "/" || u.pathname === "/index.html");
+	} catch {
+		return false;
+	}
+}
+
+function findTabByUrl(url) {
+	return tabs.find((t) => t.url === url) || null;
+}
+
+document.addEventListener("click", async (e) => {
+	const appBtn = e.target.closest("[data-lw-tab-url]");
+	if (!appBtn) return;
+
+	const targetUrl = normalizeAppUrl(appBtn.getAttribute("data-lw-tab-url"));
+
+	// Prevent nesting the app inside itself
+	if (isAppShellUrl(targetUrl)) {
+		homeBtn?.click();
+		return;
+	}
+
+	const existing = findTabByUrl(targetUrl);
+	if (existing) {
+		switchTab(existing.id);
+		return;
+	}
+
+	await createTab(targetUrl);
+});
+
 const framesContainer = document.getElementById("sj-frames-container");
 
 const navForm = document.getElementById("sj-nav-form");
@@ -31,6 +118,7 @@ const backBtn = document.getElementById("sj-back");
 const forwardBtn = document.getElementById("sj-forward");
 const reloadBtn = document.getElementById("sj-reload");
 const homeBtn = document.getElementById("sj-home-btn");
+const fullscreenBtn = document.getElementById("lw-fullscreen-btn");
 
 const { ScramjetController } = $scramjetLoadController();
 
@@ -150,16 +238,42 @@ async function createTab(url = null) {
 	frame.frame.addEventListener("load", () => {
 		try {
 			const win = frame.frame.contentWindow;
+
+			// Force dark mode via media query override or injection
+			// Many sites respect (prefers-color-scheme: dark)
+			// We can try to inject a style tag to the frame if it's the same origin (Scramjet makes it same origin usually)
+			const style = win.document.createElement("style");
+			style.id = "sj-dark-mode-injection";
+			style.textContent = `
+				:root {
+					color-scheme: dark !important;
+				}
+			`;
+			if (!win.document.getElementById("sj-dark-mode-injection")) {
+				win.document.head.appendChild(style);
+			}
+
+			// For Google specifically, we can also try to set a cookie or inject a theme color
+			if (win.location.hostname.includes("google.com")) {
+				win.document.body.classList.add("dark");
+				// Google uses cookies for theme, but injecting 'color-scheme' often triggers it for modern UI
+			}
+
 			const title = win.document.title;
 			if (title && title !== "Scramjet") {
 				tab.title = title;
 				tabEl.querySelector(".tab-title").textContent = title;
 			}
 			
-			// Try to get the current URL from the frame if possible
-			// Scramjet usually puts the original URL in some property or we can infer it
-			if (win.location.pathname.startsWith("/scram/")) {
-				// This is a bit tricky depending on scramjet version
+			// If it's a local page, try to update the URL in address bar
+			const loc = win.location;
+			if (loc.origin === window.location.origin) {
+				tab.url = loc.pathname + loc.search + loc.hash;
+				if (activeTabId === id) {
+					updateAddressBar(tab);
+				}
+			} else if (win.location.pathname.startsWith("/scram/")) {
+				// Scramjet usually puts the original URL in some property or we can infer it
 				// But we can at least update the address bar if this is the active tab
 				if (activeTabId === id) {
 					updateAddressBar(tab);
@@ -192,6 +306,17 @@ async function createTab(url = null) {
 async function loadUrlInTab(id, url) {
 	const tab = tabs.find((t) => t.id === id);
 	if (!tab) return;
+
+	const isLocal =
+		url.startsWith(window.location.origin) ||
+		url.startsWith("/") ||
+		(!url.includes("://") && !url.startsWith("data:"));
+
+	if (isLocal) {
+		tab.url = url;
+		tab.frame.frame.src = url;
+		return;
+	}
 
 	try {
 		await registerSW();
@@ -287,24 +412,66 @@ homeBtn.addEventListener("click", () => {
 	}
 });
 
-backBtn.addEventListener("click", () => {
-	const tab = tabs.find(t => t.id === activeTabId);
-	if (tab && tab.frame) {
-		tab.frame.frame.contentWindow.history.back();
+if (backBtn) {
+	backBtn.addEventListener("click", () => {
+		const tab = tabs.find(t => t.id === activeTabId);
+		if (tab && tab.frame) {
+			tab.frame.frame.contentWindow.history.back();
+		}
+	});
+}
+
+if (forwardBtn) {
+	forwardBtn.addEventListener("click", () => {
+		const tab = tabs.find(t => t.id === activeTabId);
+		if (tab && tab.frame) {
+			tab.frame.frame.contentWindow.history.forward();
+		}
+	});
+}
+
+if (reloadBtn) {
+	reloadBtn.addEventListener("click", () => {
+		const tab = tabs.find(t => t.id === activeTabId);
+		if (tab && tab.frame) {
+			tab.frame.frame.contentWindow.location.reload();
+		}
+	});
+}
+
+if (fullscreenBtn) {
+	fullscreenBtn.addEventListener("click", () => {
+		const isFullscreen = document.documentElement.classList.toggle("lw-fullscreen");
+		
+		if (isFullscreen) {
+			if (document.documentElement.requestFullscreen) {
+				document.documentElement.requestFullscreen();
+			} else if (document.documentElement.webkitRequestFullscreen) {
+				document.documentElement.webkitRequestFullscreen();
+			} else if (document.documentElement.msRequestFullscreen) {
+				document.documentElement.msRequestFullscreen();
+			}
+		} else {
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+			} else if (document.webkitExitFullscreen) {
+				document.webkitExitFullscreen();
+			} else if (document.msExitFullscreen) {
+				document.msExitFullscreen();
+			}
+		}
+	});
+}
+
+// Listen for browser-level fullscreen changes to keep UI in sync
+document.addEventListener("fullscreenchange", () => {
+	if (!document.fullscreenElement) {
+		document.documentElement.classList.remove("lw-fullscreen");
 	}
 });
-
-forwardBtn.addEventListener("click", () => {
-	const tab = tabs.find(t => t.id === activeTabId);
-	if (tab && tab.frame) {
-		tab.frame.frame.contentWindow.history.forward();
-	}
-});
-
-reloadBtn.addEventListener("click", () => {
-	const tab = tabs.find(t => t.id === activeTabId);
-	if (tab && tab.frame) {
-		tab.frame.frame.contentWindow.location.reload();
+document.addEventListener("webkitfullscreenchange", () => {
+	if (!document.webkitFullscreenElement) {
+		document.documentElement.classList.remove("lw-fullscreen");
 	}
 });
 
@@ -338,3 +505,49 @@ form.addEventListener("submit", async (event) => {
 if (tabs.length === 0) {
 	createTab();
 }
+
+function normalizeAppUrl(rawUrl) {
+	// Accept "/games.html", "games.html", or full URLs
+	return new URL(rawUrl, window.location.origin).toString();
+}
+
+function findTabByUrl(url) {
+	return tabs.find((t) => t.url === url) || null;
+}
+
+document.addEventListener("click", async (e) => {
+	const appBtn = e.target.closest("[data-lw-tab-url]");
+	const actionBtn = e.target.closest("[data-lw-action]");
+
+	if (actionBtn) {
+		const action = actionBtn.getAttribute("data-lw-action");
+		if (action === "newtab") {
+			createTab();
+		} else if (action === "home") {
+			const tab = tabs.find(t => t.id === activeTabId);
+			if (tab) {
+				tab.url = null;
+				tab.title = "New Tab";
+				tab.tabEl.querySelector(".tab-title").textContent = "New Tab";
+				switchTab(activeTabId);
+			} else {
+				createTab();
+			}
+		}
+		return;
+	}
+
+	if (!appBtn) return;
+
+	const targetUrl = normalizeAppUrl(appBtn.getAttribute("data-lw-tab-url"));
+
+	// If already open, just focus it
+	const existing = findTabByUrl(targetUrl);
+	if (existing) {
+		switchTab(existing.id);
+		return;
+	}
+
+	// Otherwise open a new tab
+	await createTab(targetUrl);
+});

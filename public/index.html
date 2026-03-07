@@ -1,190 +1,569 @@
-<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-		/>
-		<title>LineWiser</title>
 
-		<link rel="shortcut icon" content="favicon.webp" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>imreadindg.willstrang.com</title>
+  <style>
+    :root {
+      --background-color: #fff;
+      --text-color: rgb(95, 99, 104);
+      --heading-color: rgb(32, 33, 36);
+      --error-code-color: rgb(95, 99, 104);
+      --link-color: rgb(88, 88, 88);
+      --small-link-color: rgb(95, 99, 104);
+      --primary-button-fill-color: #4a46e0;
+      --primary-button-fill-color-active: #251491;
+      --primary-button-text-color: #fff;
+      --secondary-button-text-color: #4a46e0;
+      --secondary-button-border-color: #4a46e0;
+      --secondary-button-hover-border-color: #251491;
+      --secondary-button-hover-fill-color: transparent;
+      --secondary-button-fill-color: #fff;
+      --google-gray-50: rgb(248, 249, 250);
+      --google-gray-500: rgb(154, 160, 166);
+      --google-gray-600: rgb(128, 134, 139);
+      --google-gray-700: rgb(95, 99, 104);
+    }
 
-		<script src="/scram/scramjet.all.js"></script>
-		<script src="/baremux/index.js"></script>
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background-color: rgb(32, 33, 36);
+        --text-color: rgb(154, 160, 166);
+        --heading-color: rgb(154, 160, 166);
+        --error-code-color: rgb(154, 160, 166);
+        --primary-button-fill-color: #c1c4ff;
+        --primary-button-fill-color-active: #dfe1ff;
+        --primary-button-text-color: rgb(32, 33, 36);
+        --link-color: #c1c4ff;
+        --small-link-color: #c1c4ff;
+        --secondary-button-text-color: #c1c4ff;
+        --secondary-button-border-color: rgb(95, 99, 104);
+        --secondary-button-fill-color: rgb(32, 33, 36);
+        --secondary-button-hover-fill-color: rgb(48, 51, 57);
+      }
+    }
 
-		<link rel="stylesheet" href="index.css" id="sj-theme-link" />
-		<style id="sj-custom-theme"></style>
-		<script src="register-sw.js" defer></script>
-		<script src="search.js" defer></script>
-		<script src="index.js" defer></script>
-	</head>
+    * {
+      box-sizing: border-box;
+    }
 
-	<body>
-		<header class="browser-header">
-			<div id="sj-tabs" class="tabs-container">
-				<div id="sj-tab-list" class="tab-list"></div>
-				<button id="sj-add-tab" class="add-tab-btn" title="New Tab">+</button>
-			</div>
+    html {
+      -webkit-text-size-adjust: 100%;
+      font-size: 125%;
+    }
 
-			<div class="nav-bar">
-				<div class="nav-buttons">
-					<button id="sj-back" class="lw-icon-btn" title="Back" aria-label="Back">
-						←
-					</button>
-					<button id="sj-forward" class="lw-icon-btn" title="Forward" aria-label="Forward">
-						→
-					</button>
-					<button id="sj-reload" class="lw-icon-btn" title="Reload" aria-label="Reload">
-						↻
-					</button>
-				</div>
+    body {
+      background: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-size: 75%;
+      margin: 0;
+      word-wrap: break-word;
+    }
 
-				<form id="sj-nav-form" class="address-bar-form">
-					<input
-						id="sj-nav-address"
-						type="text"
-						placeholder="Search or enter address"
-						autocomplete="off"
-					/>
-				</form>
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
 
-				<button
-					id="lw-fullscreen-btn"
-					class="lw-icon-btn"
-					type="button"
-					title="Fullscreen (hides sidebar)"
-					aria-label="Fullscreen"
-				>
-					⛶
-				</button>
+    h1 {
+      color: var(--heading-color);
+      font-size: 1.6em;
+      font-weight: normal;
+      line-height: 1.25em;
+      margin-bottom: 16px;
+      margin-top: 0;
+      word-wrap: break-word;
+    }
 
-				<button
-					id="sj-home-btn"
-					class="lw-icon-btn"
-					type="button"
-					title="Home"
-					aria-label="Home"
-				>
-					⌂
-				</button>
-			</div>
-		</header>
+    h1 span {
+      font-weight: 500;
+    }
 
-		<main id="sj-main">
-			<aside class="lw-sidebar" aria-label="Sidebar">
-	<div class="lw-side-top">
-		<div class="lw-side-brand" title="LineWiser">LW</div>
+    h2 {
+      font-size: 1.2em;
+      font-weight: normal;
+    }
 
-		<button
-			id="lw-sidebar-toggle"
-			class="lw-side-toggle"
-			type="button"
-			title="Collapse sidebar"
-			aria-label="Collapse sidebar"
-		>
-			<svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
-				<path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-			</svg>
-		</button>
-	</div>
+    /* Icon */
+    .icon {
+      background-repeat: no-repeat;
+      background-size: 100%;
+      display: inline-block;
+      height: 72px;
+      margin: 0 0 40px;
+      user-select: none;
+      width: 72px;
+    }
 
-	<nav class="lw-side-nav" aria-label="Primary">
-		<button class="lw-side-btn" type="button" data-lw-action="home" title="Home">
-			<span class="lw-side-icon" aria-hidden="true">
-				<!-- icon svg ... -->
-			</span>
-			<span class="lw-side-label">Home</span>
-		</button>
+    .icon-generic {
+      content: image-set(
+              url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAENJREFUeF7tzbEJACEQRNGBLeAasBCza2lLEGx0CxFGG9hBMDDxRy/72O9FMnIFapGylsu1fgoBdkXfUHLrQgdfrlJN1BdYBjQQm3UAAAAASUVORK5CYII=") 1x,
+              url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQMAAADdiHD7AAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAFJJREFUeF7t0cENgDAMQ9FwYgxG6WjpaIzCCAxQxVggFuDiCvlLOeRdHR9yzjncHVoq3npu+wQUrUuJHylSTmBaespJyJQoObUeyxDQb3bEm5Au81c0pSCD8HYAAAAASUVORK5CYII=") 2x
+      );
+    }
 
-		<button class="lw-side-btn" type="button" data-lw-tab-url="/games.html" title="Games">
-			<span class="lw-side-icon" aria-hidden="true">
-				<!-- icon svg ... -->
-			</span>
-			<span class="lw-side-label">Games</span>
-		</button>
+    @media (prefers-color-scheme: dark) {
+      .icon {
+        filter: invert(1);
+      }
+    }
 
-		<button class="lw-side-btn" type="button" data-lw-tab-url="/apps.html" title="Apps">
-			<span class="lw-side-icon" aria-hidden="true">
-				<!-- icon svg ... -->
-			</span>
-			<span class="lw-side-label">Apps</span>
-		</button>
+    /* Layout */
+    .interstitial-wrapper {
+      box-sizing: border-box;
+      font-size: 1em;
+      line-height: 1.6em;
+      margin: 14vh auto 0;
+      max-width: 600px;
+      width: 100%;
+    }
 
-		<button class="lw-side-btn" type="button" data-lw-tab-url="/credits.html" title="Credits">
-			<span class="lw-side-icon" aria-hidden="true">
-				<!-- icon svg ... -->
-			</span>
-			<span class="lw-side-label">Credits</span>
-		</button>
+    #main-message > p {
+      display: inline;
+    }
 
-		<div class="lw-side-sep"></div>
+    .error-code {
+      color: var(--error-code-color);
+      font-size: .8em;
+      margin-top: 12px;
+      text-transform: uppercase;
+    }
 
-		<button class="lw-side-btn lw-side-btn--muted" type="button" data-lw-action="newtab" title="New Tab">
-			<span class="lw-side-icon" aria-hidden="true">
-				<!-- icon svg ... -->
-			</span>
-			<span class="lw-side-label">New tab</span>
-		</button>
-	</nav>
-</aside>
+    /* Buttons */
+    button {
+      background: var(--primary-button-fill-color);
+      border: 0;
+      border-radius: 20px;
+      box-sizing: border-box;
+      color: var(--primary-button-text-color);
+      cursor: pointer;
+      float: right;
+      font-size: .875em;
+      margin: 0;
+      padding: 9px 16px;
+      transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
 
-			<div class="lw-content">
-				<div id="sj-home">
-					<section class="lw-hero">
-						<h1 class="lw-title">LineWiser</h1>
-						<p class="lw-subtitle">Cleaner. Faster. Smarter.</p>
+    button:hover {
+      background: var(--primary-button-fill-color-active);
+    }
 
-						<form id="sj-form" class="lw-search">
-							<input
-								id="sj-search-engine"
-								value="https://www.google.com/search?q=%s&udm=2&cs=1"
-								type="hidden"
-							/>
-							<input
-								id="sj-address"
-								type="text"
-								placeholder="Search the web freely"
-								autocomplete="off"
-							/>
-							<button class="lw-search-btn" type="submit">Search</button>
-						</form>
+    button:active {
+      background: var(--primary-button-fill-color-active);
+      opacity: 0.8;
+      outline: 0;
+    }
 
-						<div class="lw-quick">
-							<button class="lw-chip" type="button" data-lw-url="https://google.com">
-								Google
-							</button>
-							<button class="lw-chip" type="button" data-lw-url="https://youtube.com">
-								YouTube
-							</button>
-							<button class="lw-chip" type="button" data-lw-url="https://wikipedia.org">
-								Wikipedia
-							</button>
-							<button class="lw-chip" type="button" data-lw-url="https://github.com">
-								GitHub
-							</button>
-						</div>
+    .secondary-button {
+      background: var(--secondary-button-fill-color);
+      border: 1px solid var(--secondary-button-border-color);
+      color: var(--secondary-button-text-color);
+      float: none;
+      margin: 0;
+      padding: 8px 16px;
+    }
 
-						<div class="desc left-margin">
-							<p id="sj-error"></p>
-							<pre id="sj-error-code"></pre>
-						</div>
-					</section>
-				</div>
+    .secondary-button:hover {
+      background: var(--secondary-button-hover-fill-color);
+      border-color: var(--secondary-button-hover-border-color);
+      box-shadow: 0px 1px 0px 0px rgba(0,0,0,.05), 0px 1px 4px 0px rgba(0,0,0,.1);
+      text-decoration: none;
+    }
 
-				<div id="sj-frames-container"></div>
-			</div>
-		</main>
+    .secondary-button:active {
+      border-color: white;
+      box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 2px 6px 2px rgba(60, 64, 67, .15);
+    }
 
-		<script>
-			// Quick links: fill search bar and reuse the existing submit handler
-			document.addEventListener("click", (e) => {
-				const btn = e.target.closest("[data-lw-url]");
-				if (!btn) return;
-				const input = document.getElementById("sj-address");
-				input.value = btn.getAttribute("data-lw-url");
-				document.getElementById("sj-form").requestSubmit();
-			});
-		</script>
-	</body>
+    /* Nav */
+    .nav-wrapper {
+      margin-top: 51px;
+    }
+
+    .nav-wrapper::after {
+      clear: both;
+      content: '';
+      display: table;
+      width: 100%;
+    }
+
+    .small-link {
+      color: var(--small-link-color);
+      font-size: .875em;
+    }
+
+    /* Details */
+    #details {
+      margin: 0 0 50px;
+    }
+
+    #details p:not(:first-of-type) {
+      margin-top: 20px;
+    }
+
+    .suggestions {
+      margin-top: 18px;
+    }
+
+    .suggestion-header {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .suggestion-body {
+      color: #777;
+    }
+
+    /* Buttons layout */
+    #buttons::after {
+      clear: both;
+      content: '';
+      display: block;
+      width: 100%;
+    }
+
+    .suggested-left > #control-buttons,
+    .suggested-right > #details-button {
+      float: left;
+    }
+
+    .suggested-right > #control-buttons,
+    .suggested-left > #details-button {
+      float: right;
+    }
+
+    #details-button {
+      box-shadow: none;
+      min-width: 0;
+    }
+
+    #details-button.singular {
+      float: none;
+    }
+
+    /* Sub-frame error */
+    #sub-frame-error {
+      align-items: center;
+      background-color: #DDD;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      left: 0;
+      position: absolute;
+      text-align: center;
+      top: 0;
+      transition: background-color 200ms ease-in-out;
+      width: 100%;
+    }
+
+    #sub-frame-error:hover {
+      background-color: #EEE;
+    }
+
+    #sub-frame-error .icon-generic {
+      margin: 0 0 16px;
+    }
+
+    #sub-frame-error-details {
+      color: #8F8F8F;
+      margin: 0 10px;
+      opacity: 0;
+      text-align: center;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+    }
+
+    #sub-frame-error:hover #sub-frame-error-details {
+      opacity: 1;
+    }
+
+    /* Hidden */
+    .hidden {
+      display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .interstitial-wrapper {
+        padding: 0 10%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      button,
+      .small-link {
+        float: none;
+        font-size: .825em;
+        font-weight: 500;
+        margin: 0;
+        width: 100%;
+      }
+
+      button {
+        padding: 16px 24px;
+      }
+
+      #details {
+        margin: 20px 0 20px 0;
+      }
+
+      #details p:not(:first-of-type) {
+        margin-top: 10px;
+      }
+
+      .secondary-button:not(.hidden) {
+        display: block;
+        margin-top: 20px;
+        text-align: center;
+        width: 100%;
+      }
+
+      .interstitial-wrapper {
+        padding: 0 5%;
+      }
+
+      .nav-wrapper {
+        margin-top: 30px;
+      }
+
+      .nav-wrapper .secondary-button {
+        border: 0;
+        margin: 16px 0 0;
+        padding-bottom: 16px;
+        padding-top: 16px;
+      }
+    }
+
+    @media (min-width: 240px) and (max-width: 420px) and (min-height: 401px),
+    (min-width: 421px) and (min-height: 240px) and (max-height: 560px) {
+      body .nav-wrapper {
+        background: var(--background-color);
+        bottom: 0;
+        box-shadow: 0 -12px 24px var(--background-color);
+        left: 0;
+        margin: 0 auto;
+        max-width: 736px;
+        padding-left: 24px;
+        padding-right: 24px;
+        position: fixed;
+        right: 0;
+        width: 100%;
+        z-index: 2;
+      }
+
+      .interstitial-wrapper {
+        max-width: 736px;
+      }
+
+      #details,
+      #main-content {
+        padding-bottom: 40px;
+      }
+    }
+
+    @media (max-height: 350px) {
+      h1 {
+        margin: 0 0 15px;
+      }
+
+      .icon {
+        margin-bottom: 10px;
+      }
+
+      .interstitial-wrapper {
+        margin-top: 5%;
+      }
+
+      .nav-wrapper {
+        margin-top: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="main-frame-error" class="interstitial-wrapper">
+  <div id="main-content">
+    <div class="icon icon-generic"></div>
+    <div id="main-message">
+      <h1>
+        <span>This site can't be reached</span>
+      </h1>
+      <p><strong>imreadindg.willstrang.com</strong>'s <abbr title="Domain Name System">DNS address</abbr> could not be found. Diagnosing the problem.</p>
+      <div class="error-code">DNS_PROBE_POSSIBLE</div>
+    </div>
+  </div>
+
+  <div id="buttons" class="nav-wrapper suggested-left">
+    <div id="control-buttons">
+      <button id="reload-button" onclick="window.location.href='http://imreadindg.willstrang.com/'">
+        Reload
+      </button>
+    </div>
+  </div>
+
+  <div id="details"></div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const errorPageEl = document.getElementById("main-frame-error");
+    const reloadBtn = document.getElementById("reload-button");
+
+    /* ---------------- THEME ---------------- */
+
+    function applyTheme(isDark) {
+      if (isDark) {
+        root.style.setProperty("--background-color", "rgb(32, 33, 36)");
+        root.style.setProperty("--text-color", "rgb(154, 160, 166)");
+        root.style.setProperty("--heading-color", "rgb(154, 160, 166)");
+        root.style.setProperty("--error-code-color", "rgb(154, 160, 166)");
+        root.style.setProperty("--primary-button-fill-color", "#c1c4ff");
+        root.style.setProperty("--primary-button-fill-color-active", "#dfe1ff");
+        root.style.setProperty("--primary-button-text-color", "rgb(32, 33, 36)");
+      } else {
+        root.style.setProperty("--background-color", "#fff");
+        root.style.setProperty("--text-color", "rgb(95, 99, 104)");
+        root.style.setProperty("--heading-color", "rgb(32, 33, 36)");
+        root.style.setProperty("--error-code-color", "rgb(95, 99, 104)");
+        root.style.setProperty("--primary-button-fill-color", "#4a46e0");
+        root.style.setProperty("--primary-button-fill-color-active", "#251491");
+        root.style.setProperty("--primary-button-text-color", "#fff");
+      }
+    }
+
+    applyTheme(mediaQuery.matches);
+    mediaQuery.addEventListener("change", e => applyTheme(e.matches));
+
+    /* ---------------- DOMAIN AUTO REPLACE ---------------- */
+
+    const currentDomain = window.location.hostname;
+    document.title = currentDomain;
+
+    document.querySelectorAll("strong").forEach(el => {
+      el.textContent = currentDomain;
+    });
+
+    if (reloadBtn) {
+      reloadBtn.onclick = () => window.location.href = window.location.origin;
+    }
+
+    /* ---------------- FIRST TIME SCREEN (EMBEDDED) ---------------- */
+
+    const isFirstTime = !localStorage.getItem("firstTime");
+
+    if (isFirstTime) {
+
+      localStorage.setItem("firstTime", "true");
+
+      // Hide error page
+      if (errorPageEl) errorPageEl.style.display = "none";
+
+      // Create first-time overlay
+      const firstTimeDiv = document.createElement("div");
+      firstTimeDiv.style.position = "fixed";
+      firstTimeDiv.style.inset = "0";
+      firstTimeDiv.style.background = "black";
+      firstTimeDiv.style.color = "white";
+      firstTimeDiv.style.display = "flex";
+      firstTimeDiv.style.flexDirection = "column";
+      firstTimeDiv.style.justifyContent = "center";
+      firstTimeDiv.style.alignItems = "center";
+      firstTimeDiv.style.textAlign = "center";
+      firstTimeDiv.style.zIndex = "9999";
+      firstTimeDiv.style.fontFamily = "Inter, Segoe UI, Tahoma, sans-serif";
+
+      firstTimeDiv.innerHTML = `
+      <div style="background: radial-gradient(1200px 600px at 50% -20%, rgba(138, 180, 248, 0.15), transparent 55%), #111; position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 9999; font-family: 'Poppins', sans-serif;">
+
+  <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); padding: 40px; border-radius: 28px; max-width: 500px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+
+    <h2 style="font-family: 'DM Serif Display', serif; font-weight: 400; font-size: 42px; color: #fff; margin: 0 0 20px 0;">Welcome to <span style="color: #8ab4f8;">LineWiser</span></h2>
+
+    <div style="color: #9aa0a6; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+      <h3 style="font-weight: 400; margin: 10px 0;">Next time when you visit, there will be a <span style="color: #8ab4f8; font-weight: 600;">fake error page</span>.</h3>
+      <h3 style="font-weight: 400; margin: 10px 0;">Press <span style="color: #8ab4f8; font-weight: 600;">ANY KEY</span> on that page to enter your dashboard.</h3>
+      <h3 style="font-weight: 400; margin: 20px 0 10px 0; opacity: 0.8;">For now though, you can press this button:</h3>
+    </div>
+
+    <button id="cloakBtn" disabled
+      style="background: #8ab4f8; color: #111; border: none; padding: 16px 36px; font-size: 15px; font-weight: 600; border-radius: 16px; cursor: not-allowed; opacity: 0.5; transition: all 0.3s ease; width: 100%;">
+      Continue in 5 seconds
+    </button>
+
+  </div>
+</div>
+    `;
+
+      document.body.appendChild(firstTimeDiv);
+
+      const cloakBtn = document.getElementById("cloakBtn");
+      let count = 5;
+
+      const interval = setInterval(() => {
+        cloakBtn.innerHTML = "Continue in " + count + " seconds";
+        count--;
+
+        if (count < 0) {
+          clearInterval(interval);
+          cloakBtn.disabled = false;
+          cloakBtn.style.opacity = "1";
+          cloakBtn.style.cursor = "pointer";
+          cloakBtn.innerHTML = "Continue";
+          cloakBtn.addEventListener("click", openCloak);
+        }
+      }, 1000);
+
+    }
+
+    /* ---------------- KEY SHORTCUT (P) ---------------- */
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key.toLowerCase() === "l") {
+        openCloak();
+      }
+    });
+
+    /* ---------------- CLOAK FUNCTION ---------------- */
+
+    function openCloak() {
+      const tab = window.open("about:blank", "_blank");
+      if (!tab) return;
+
+      tab.document.write(`
+      <html>
+        <body style="margin:0">
+          <iframe src="/dashboard.html"
+            style="border:none;height:100%;width:100%;
+            position:fixed;left:0;top:0;">
+          </iframe>
+        </body>
+        <script>
+          window.addEventListener('beforeunload', function (e) {
+            e.preventDefault();
+          });
+        <\/script>
+      </html>
+    `);
+
+      tab.document.close();
+      window.location.href = "https://classroom.google.com";
+    }
+
+    /* ---------------- MOBILE REDIRECT ---------------- */
+
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent)) {
+      window.location.href = "/dashboard.html";
+    }
+
+  });
+</script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"8fa25d7c2b554220a3ec0b9ce80757a2","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
 </html>

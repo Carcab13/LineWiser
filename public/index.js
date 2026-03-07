@@ -23,7 +23,6 @@ const home = document.getElementById("sj-home");
 const tabsContainer = document.getElementById("sj-tabs");
 const tabList = document.getElementById("sj-tab-list");
 const addTabBtn = document.getElementById("sj-add-tab");
-const homeBtn = document.getElementById("sj-home-btn");
 const lwSidebarToggle = document.getElementById("lw-sidebar-toggle");
 
 // --- Sidebar collapse (remembered) ---
@@ -264,7 +263,7 @@ async function createTab(url = null) {
 				tab.title = title;
 				tabEl.querySelector(".tab-title").textContent = title;
 			}
-			
+
 			// If it's a local page, try to update the URL in address bar
 			const loc = win.location;
 			if (loc.origin === window.location.origin) {
@@ -352,7 +351,7 @@ function updateAddressBar(tab) {
 function switchTab(id) {
 	activeTabId = id;
 	const activeTab = tabs.find(t => t.id === id);
-	
+
 	tabs.forEach((t) => {
 		if (t.id === id) {
 			t.tabEl.classList.add("active");
@@ -371,7 +370,7 @@ function switchTab(id) {
 	} else {
 		home.classList.add("hidden");
 	}
-	
+
 	updateAddressBar(activeTab);
 }
 
@@ -442,7 +441,7 @@ if (reloadBtn) {
 if (fullscreenBtn) {
 	fullscreenBtn.addEventListener("click", () => {
 		const isFullscreen = document.documentElement.classList.toggle("lw-fullscreen");
-		
+
 		if (isFullscreen) {
 			if (document.documentElement.requestFullscreen) {
 				document.documentElement.requestFullscreen();

@@ -1,0 +1,296 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>LineWiser</title>
+
+    <link rel="shortcut icon" content="favicon.webp" />
+
+    <script src="/scram/scramjet.all.js"></script>
+    <script src="/baremux/index.js"></script>
+
+    <link rel="stylesheet" href="index.css" id="sj-theme-link" />
+    <style id="sj-custom-theme"></style>
+    <script src="register-sw.js" defer></script>
+    <script src="search.js" defer></script>
+    <script src="index.js" defer></script>
+<script>
+    function initLineWiser() {
+        const getLw = (n) => {
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(n + "=") == 0) return decodeURIComponent(c.substring(n.length + 1));
+            } return null;
+        };
+
+        // 1. Apply Theme
+        const theme = getLw('lw-theme');
+        const colors = {
+            'blue': '#8ab4f8',
+            'purple': '#a855f7',
+            'emerald': '#10b981',
+            'crimson': '#f43f5e',
+            'amber': '#fbbf24'
+        };
+        if (theme && colors[theme]) {
+            document.documentElement.style.setProperty('--accent-color', colors[theme]);
+            document.documentElement.style.setProperty('--accent-shadow', colors[theme] + '66');
+        }
+
+        // 2. Apply Custom Background
+        const bgUrl = getLw('lw-bg-url');
+        const bgContainer = document.getElementById('sj-home') || document.body;
+        if (bgUrl && bgContainer) {
+            bgContainer.style.backgroundImage = `url('${bgUrl}')`;
+            bgContainer.style.backgroundSize = 'cover';
+            bgContainer.style.backgroundPosition = 'center';
+        }
+
+        // 3. Apply Engine
+        const engine = getLw('lw-engine');
+        const engineInput = document.getElementById('sj-search-engine');
+        if (engine && engineInput) engineInput.value = engine;
+
+        // 4. Panic Key
+        const panic = getLw('lw-panic-key');
+        if (panic) {
+            window.addEventListener('keydown', (e) => {
+                if (e.key === panic) window.location.replace('https://classroom.google.com');
+            });
+        }
+    }
+    document.addEventListener('DOMContentLoaded', initLineWiser);
+</script>
+</head>
+
+<body>
+    <header class="browser-header">
+        <div id="sj-tabs" class="tabs-container">
+            <div id="sj-tab-list" class="tab-list"></div>
+            <button id="sj-add-tab" class="add-tab-btn" title="New Tab">+</button>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-buttons">
+                <button id="sj-back" class="lw-icon-btn" title="Back">←</button>
+                <button id="sj-forward" class="lw-icon-btn" title="Forward">→</button>
+                <button id="sj-reload" class="lw-icon-btn" title="Reload">↻</button>
+            </div>
+
+            <form id="sj-nav-form" class="address-bar-form">
+                <input id="sj-nav-address" type="text" placeholder="Search or enter address" autocomplete="off" />
+            </form>
+
+            <button id="lw-fullscreen-btn" class="lw-icon-btn" title="Fullscreen">⛶</button>
+            <button id="sj-home-btn" class="lw-icon-btn" title="Home">⌂</button>
+        </div>
+    </header>
+
+    <main id="sj-main">
+        <aside class="lw-sidebar" aria-label="Sidebar">
+            <div class="lw-side-top">
+                <div class="lw-side-brand" title="LineWiser">LW</div>
+                <button id="lw-sidebar-toggle" class="lw-side-toggle" title="Collapse sidebar">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="lw-side-nav" aria-label="Primary">
+	<button class="lw-side-btn" type="button" data-lw-action="home" title="Home">
+		<span class="lw-side-icon" aria-hidden="true">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M298.2 72.6C310.5 61.2 329.5 61.2 341.7 72.6L432 156.3L432 144C432 126.3 446.3 112 464 112L496 112C513.7 112 528 126.3 528 144L528 245.5L565.8 280.6C575.4 289.6 578.6 303.5 573.8 315.7C569 327.9 557.2 336 544 336L528 336L528 512C528 547.3 499.3 576 464 576L176 576C140.7 576 112 547.3 112 512L112 336L96 336C82.8 336 71 327.9 66.2 315.7C61.4 303.5 64.6 289.5 74.2 280.6L298.2 72.6zM304 384C277.5 384 256 405.5 256 432L256 528L384 528L384 432C384 405.5 362.5 384 336 384L304 384z"/></svg>
+		</span>
+		<span class="lw-side-label">Home</span>
+	</button>
+
+	<button class="lw-side-btn" type="button" data-lw-tab-url="/games.html" title="Games">
+		<span class="lw-side-icon" aria-hidden="true">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M448 128C554 128 640 214 640 320C640 426 554 512 448 512L192 512C86 512 0 426 0 320C0 214 86 128 192 128L448 128zM192 240C178.7 240 168 250.7 168 264L168 296L136 296C122.7 296 112 306.7 112 320C112 333.3 122.7 344 136 344L168 344L168 376C168 389.3 178.7 400 192 400C205.3 400 216 389.3 216 376L216 344L248 344C261.3 344 272 333.3 272 320C272 306.7 261.3 296 248 296L216 296L216 264C216 250.7 205.3 240 192 240zM432 336C414.3 336 400 350.3 400 368C400 385.7 414.3 400 432 400C449.7 400 464 385.7 464 368C464 350.3 449.7 336 432 336zM496 240C478.3 240 464 254.3 464 272C464 289.7 478.3 304 496 304C513.7 304 528 289.7 528 272C528 254.3 513.7 240 496 240z"/></svg>
+		</span>
+		<span class="lw-side-label">Games</span>
+	</button>
+
+	<button class="lw-side-btn" type="button" data-lw-tab-url="/apps.html" title="Apps">
+		<span class="lw-side-icon" aria-hidden="true">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M144 128C144 92.7 172.7 64 208 64L432 64C467.3 64 496 92.7 496 128L496 512C496 547.3 467.3 576 432 576L208 576C172.7 576 144 547.3 144 512L144 128zM256 504C256 517.3 266.7 528 280 528L360 528C373.3 528 384 517.3 384 504C384 490.7 373.3 480 360 480L280 480C266.7 480 256 490.7 256 504zM432 128L208 128L208 432L432 432L432 128z"/></svg>
+		</span>
+		<span class="lw-side-label">Apps</span>
+	</button>
+
+	<button class="lw-side-btn" type="button" data-lw-tab-url="/credits.html" title="Credits">
+		<span class="lw-side-icon" aria-hidden="true">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 112C434.9 112 528 205.1 528 320C528 434.9 434.9 528 320 528C205.1 528 112 434.9 112 320C112 205.1 205.1 112 320 112zM320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM269.1 370.9C241 342.8 241 297.2 269.1 269.1C297.2 241 342.8 241 370.9 269.1C380.3 278.5 395.5 278.5 404.8 269.1C414.1 259.7 414.2 244.5 404.8 235.2C357.9 188.3 282 188.3 235.1 235.2C188.2 282.1 188.2 358 235.1 404.9C282 451.8 357.9 451.8 404.8 404.9C414.2 395.5 414.2 380.3 404.8 371C395.4 361.7 380.2 361.6 370.9 371C342.8 399.1 297.2 399.1 269.1 371z"/></svg>
+		</span>
+		<span class="lw-side-label">Credits</span>
+	</button>
+
+	<div class="lw-side-sep"></div>
+
+	<!-- <button class="lw-side-btn lw-side-btn--muted" type="button" data-lw-tab-url="/settings.html" title="Settings">
+		<span class="lw-side-icon" aria-hidden="true">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor">><path d="M96 128C78.3 128 64 142.3 64 160C64 177.7 78.3 192 96 192L182.7 192C195 220.3 223.2 240 256 240C288.8 240 317 220.3 329.3 192L544 192C561.7 192 576 177.7 576 160C576 142.3 561.7 128 544 128L329.3 128C317 99.7 288.8 80 256 80C223.2 80 195 99.7 182.7 128L96 128zM96 288C78.3 288 64 302.3 64 320C64 337.7 78.3 352 96 352L342.7 352C355 380.3 383.2 400 416 400C448.8 400 477 380.3 489.3 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L489.3 288C477 259.7 448.8 240 416 240C383.2 240 355 259.7 342.7 288L96 288zM96 448C78.3 448 64 462.3 64 480C64 497.7 78.3 512 96 512L150.7 512C163 540.3 191.2 560 224 560C256.8 560 285 540.3 297.3 512L544 512C561.7 512 576 497.7 576 480C576 462.3 561.7 448 544 448L297.3 448C285 419.7 256.8 400 224 400C191.2 400 163 419.7 150.7 448L96 448z"/></svg>
+		</span>
+		<span class="lw-side-label">Settings</span>
+	</button> -->
+<button class="lw-side-btn lw-side-btn--muted" type="button" data-lw-tab-url="https://app.formbricks.com/s/cmmgkhkp4zojys101ocrqfvsz" title="Report Bug">
+		<span class="lw-side-icon" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M224 160C224 107 267 64 320 64C373 64 416 107 416 160L416 163.6C416 179.3 403.3 192 387.6 192L252.5 192C236.8 192 224.1 179.3 224.1 163.6L224.1 160zM569.6 172.8C580.2 186.9 577.3 207 563.2 217.6L465.4 290.9C470.7 299.8 474.7 309.6 477.2 320L576 320C593.7 320 608 334.3 608 352C608 369.7 593.7 384 576 384L480 384L480 416C480 418.6 479.9 421.3 479.8 423.9L563.2 486.4C577.3 497 580.2 517.1 569.6 531.2C559 545.3 538.9 548.2 524.8 537.6L461.7 490.3C438.5 534.5 395.2 566.5 344 574.2L344 344C344 330.7 333.3 320 320 320C306.7 320 296 330.7 296 344L296 574.2C244.8 566.5 201.5 534.5 178.3 490.3L115.2 537.6C101.1 548.2 81 545.3 70.4 531.2C59.8 517.1 62.7 497 76.8 486.4L160.2 423.9C160.1 421.3 160 418.7 160 416L160 384L64 384C46.3 384 32 369.7 32 352C32 334.3 46.3 320 64 320L162.8 320C165.3 309.6 169.3 299.8 174.6 290.9L76.8 217.6C62.7 207 59.8 186.9 70.4 172.8C81 158.7 101.1 155.8 115.2 166.4L224 248C236.3 242.9 249.8 240 264 240L376 240C390.2 240 403.7 242.8 416 248L524.8 166.4C538.9 155.8 559 158.7 569.6 172.8z"/></svg>
+		</span>
+		<span class="lw-side-label">Report Bug</span>
+	</button>
+</nav>
+        </aside>
+
+        <div class="lw-content">
+            <div id="sj-home">
+                <section class="lw-hero">
+                    <h1 class="lw-title">LineWiser</h1>
+                    <form id="sj-form" class="lw-search">
+                        <input id="sj-search-engine" value="https://www.google.com/search?q=%s&udm=2&cs=1" type="hidden" />
+                        <input id="sj-address" type="text" placeholder="Search the web freely" autocomplete="off" />
+                        <button class="lw-search-btn" type="submit">Search</button>
+                    </form>
+                    <!-- Shortcuts Grid -->
+                    <div id="shortcuts-container" class="lw-shortcuts-grid"></div>
+
+                    <div class="flex-center" style="margin-top: 20px;">
+                        <button id="add-shortcut-btn" class="lw-chip" style="opacity: 0.6; font-size: 11px;">+ Add Shortcut</button>
+                    </div>
+
+                    <div class="desc left-margin">
+                        <p id="sj-error"></p>
+                        <pre id="sj-error-code"></pre>
+                    </div>
+                </section>
+            </div>
+            <div id="sj-frames-container"></div>
+        </div>
+    </main>
+
+ <script>
+    // --- CONFIG ---
+    const COOKIE_NAME = "lw_shortcuts";
+    const shortcutsGrid = document.getElementById('shortcuts-container');
+    const addBtn = document.getElementById('add-shortcut-btn');
+    let brandClicks = 0;
+    let brandTimer;
+
+    // --- COOKIE HELPERS ---
+    function setCookie(name, value, days) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = name + "=" + encodeURIComponent(JSON.stringify(value)) + ";expires=" + d.toUTCString() + ";path=/";
+    }
+
+    function getCookie(name) {
+        let nameEQ = name + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) {
+                try { return JSON.parse(decodeURIComponent(c.substring(nameEQ.length, c.length))); }
+                catch(e) { return null; }
+            }
+        }
+        return null;
+    }
+
+    // --- SHORTCUTS LOGIC ---
+    const defaultShortcuts = [
+        { name: "Google", url: "https://google.com" },
+        { name: "YouTube", url: "https://youtube.com" },
+        { name: "GitHub", url: "https://github.com" }
+    ];
+
+    let userShortcuts = getCookie(COOKIE_NAME) || defaultShortcuts;
+
+    function renderShortcuts() {
+        if (!shortcutsGrid) return;
+        shortcutsGrid.innerHTML = '';
+
+        userShortcuts.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'lw-shortcut';
+
+            // We use a simple SPAN with "LW" instead of an <img> tag
+            div.innerHTML = `
+                <button class="lw-shortcut-del" title="Remove">&times;</button>
+                <div class="lw-shortcut-icon">
+                    <span style="color: #8ab4f8; font-weight: 700; font-size: 18px; user-select: none; font-family: var(--font-main);">LW</span>
+                </div>
+                <div class="lw-shortcut-label">${item.name}</div>
+            `;
+
+            // Click to open in proxy
+            div.addEventListener('click', (e) => {
+                if (e.target.classList.contains('lw-shortcut-del')) return;
+                const input = document.getElementById("sj-address");
+                if (input) {
+                    input.value = item.url;
+                    document.getElementById("sj-form").requestSubmit();
+                }
+            });
+
+            // Delete logic
+            div.querySelector('.lw-shortcut-del').addEventListener('click', (e) => {
+                e.stopPropagation();
+                userShortcuts.splice(index, 1);
+                setCookie(COOKIE_NAME, userShortcuts, 365);
+                renderShortcuts();
+            });
+
+            shortcutsGrid.appendChild(div);
+        });
+    }
+
+    // --- GLOBAL EVENT LISTENERS ---
+    document.addEventListener("click", (e) => {
+        // Triple-Click Brand Logic
+        const brand = e.target.closest(".lw-side-brand");
+        if (brand) {
+            brandClicks++;
+            clearTimeout(brandTimer);
+            brandTimer = setTimeout(() => { brandClicks = 0; }, 800);
+            if (brandClicks === 3) {
+                brandClicks = 0;
+                const dummy = document.createElement("button");
+                dummy.setAttribute("data-lw-tab-url", "/secret.html");
+                document.body.appendChild(dummy);
+                dummy.click();
+                dummy.remove();
+            }
+            return;
+        }
+
+        // Quick Links Logic (data-lw-url buttons)
+        const btn = e.target.closest("[data-lw-url]");
+        if (btn) {
+            const input = document.getElementById("sj-address");
+            input.value = btn.getAttribute("data-lw-url");
+            document.getElementById("sj-form").requestSubmit();
+        }
+    });
+
+    // Add Shortcut Button
+    addBtn.addEventListener('click', () => {
+        const name = prompt("Shortcut Name:");
+        if (!name) return;
+        let url = prompt("URL (e.g. https://google.com):");
+        if (!url) return;
+        if (!url.startsWith('http')) url = 'https://' + url;
+
+        userShortcuts.push({ name, url });
+        setCookie(COOKIE_NAME, userShortcuts, 365);
+        renderShortcuts();
+    });
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', renderShortcuts);
+</script>
+</body>
+</html>

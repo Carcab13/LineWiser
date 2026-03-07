@@ -1,0 +1,205 @@
+:root {
+	/* Background Colors */
+	--bg-primary: #111;
+	--header-bg: #202124;
+	--nav-bar-bg: #35363a;
+	--tab-bg-active: #35363a;
+	--tab-bg-hover: #292a2d;
+	--address-bar-bg: #202124;
+	--address-bar-focus-bg: #292a2d;
+
+	/* Text Colors */
+	--text-primary: #fff;
+	--text-secondary: #9aa0a6;
+	--text-active: #e8eaed;
+	--text-muted: rgba(253, 253, 253, 0.514);
+
+	/* Accent Colors */
+	--accent-color: #8ab4f8;
+	--accent-shadow: rgba(138, 180, 248, 0.5);
+
+	/* Border & Radius */
+	--border-color: rgba(255, 255, 255, 0.2);
+	--border-focus: rgba(253, 253, 253, 0.514);
+	--border-radius-pill: 50px;
+	--border-radius-sm: 8px;
+
+	/* Fonts */
+	--font-main: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+		sans-serif;
+	--font-display: "DM Serif Display", serif;
+}
+
+html, body {
+    height: auto;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    /* This allows the browser to show a scrollbar when content overflows */
+    overflow-y: auto;
+    overflow-x: hidden;
+    html, body {
+    height: auto;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /* --- ADDED GLOW BELOW --- */
+    background: radial-gradient(
+            1200px 600px at 50% -20%,
+            rgba(138, 180, 248, 0.18), /* This is your blue glow */
+            transparent 70%
+        ),
+        var(--bg-primary); /* This is your base black color */
+
+    /* This keeps the glow at the top of the window while you scroll */
+    background-attachment: fixed;
+}
+
+/* Ensure the main container doesn't trap the height */
+main {
+    display: block;
+    min-height: 100vh;
+    /* Add extra padding at the bottom so the last row of games
+       doesn't touch the very edge of the screen */
+    padding-bottom: 80px !important;
+}
+
+/* The Grid */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 25px;
+    /* Ensure the grid itself doesn't hide anything */
+    overflow: visible;
+}
+
+/* Smooth Scrolling (Optional but nice) */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar styling to match your theme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-secondary);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-primary);
+}
+
+.game-grid {
+    display: grid;
+    /* Responsive columns that look good on mobile and desktop */
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+/* 2. The Card Styling */
+.game-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 24px; /* Matches the outer curve */
+    background: rgba(255, 255, 255, 0.03); /* Subtle glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 3. Hover Effects */
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.game-icon {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 14px;
+    position: relative;
+
+    /* Standard Rounded Square instead of Squircle */
+    border-radius: 22px;
+    overflow: hidden; /* This clips the image to the rounded corners */
+
+    background: #2a2a2a;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: border-radius 0.3s ease; /* Smooth transition if you want to animate it */
+}
+
+/* 2. Update the Image inside to ensure it fits the corners */
+.game-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 22px; /* Match the container */
+    transition: transform 0.5s ease;
+}
+
+/* 3. Optional: Make them slightly rounder when you hover */
+.game-card:hover .game-icon {
+    border-radius: 28px;
+}
+
+/* Zoom effect on image when hovering card */
+.game-card:hover .game-icon img {
+    transform: scale(1.1);
+}
+
+/* 5. Typography */
+.game-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds "..." for long names */
+    letter-spacing: 0.3px;
+    transition: color 0.3s ease;
+}
+
+/* .game-card:hover .game-name {
+    color: #fff; /* Brighten text on hover
+}  */
+
+/* 6. Subtle Glow Backdrop (Optional)
+/* This adds a faint color glow behind the card on hover */
+/* .game-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    background: var(--text-secondary);
+    filter: blur(40px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+    transform: translate(-50%, -50%);
+} */
+
+.game-card:hover::after {
+    opacity: 0.15;
+}
+}

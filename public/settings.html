@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LineWiser — Settings</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+        /* Enable Scrolling */
+        html, body {
+            height: auto;
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: radial-gradient(1200px 600px at 50% -20%, rgba(138, 180, 248, 0.15), transparent 55%), #111;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: var(--font-main);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding-bottom: 50px;
+        }
+
+        .header-section { text-align: center; margin-bottom: 40px; }
+        .header-section h1 { font-family: var(--font-display); font-weight: 400; font-size: 3rem; margin: 10px 0; color: #fff; }
+
+        /* Card Styling */
+        .settings-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-card h3 { margin: 0 0 20px 0; font-size: 18px; color: var(--accent-color); font-weight: 600; }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            gap: 20px;
+        }
+        .setting-item:last-child { border-bottom: none; }
+
+        .setting-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+        .setting-label { font-weight: 500; font-size: 15px; color: #fff; }
+        .setting-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+
+        /* Better Styled Dropdowns & Inputs */
+        select, input[type="text"] {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-family: inherit;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            min-width: 160px;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        select:hover, input:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--accent-color); }
+        select:focus, input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px var(--accent-shadow); }
+
+        /* Save Button */
+        .save-bar {
+            position: sticky;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            z-index: 100;
+        }
+
+        .save-btn {
+            background: var(--accent-color);
+            color: #111;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px var(--accent-shadow);
+            transition: all 0.2s;
+        }
+
+        .save-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .save-btn:active { transform: scale(0.98); }
+
+        .danger-btn {
+            background: transparent;
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.2);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .danger-btn:hover { background: rgba(255, 77, 77, 0.1); border-color: #ff4d4d; }
+
+        .back-btn {
+            position: absolute; top: 30px; left: 30px; text-decoration: none;
+            color: var(--text-secondary); background: rgba(255,255,255,0.05);
+            padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border-color); font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="#" class="back-btn" onclick="goHome(event)">← Home</a>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Settings</h1>
+            <p>Personalize your dashboard and stealth settings.</p>
+        </div>
+
+        <!-- Appearance Section -->
+        <div class="settings-card">
+            <h3>Appearance</h3>
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">Theme Color</span>
+                    <span class="setting-desc">Sets the accent color for buttons, glows, and icons.</span>
+                </div>
+                <select id="theme-select">
+                    <option value="blue">LineWiser Blue</option>
+                    <option value="purple">Vibrant Purple</option>
+                    <option value="emerald">Emerald Green</option>
+                    <option value="crimson">Crimson Red</option>
+                    <option value="amber">Amber Gold</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">Search Engine</span>
+                    <span class="setting-desc">Primary engine used on the home page.</span>
+                </div>
+                <select id="engine-select">
+                    <option value="https://www.google.com/search?q=%s">Google</option>
+                    <option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option>
+                    <option value="https://www.bing.com/search?q=%s">Bing</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">Background Image</span>
+                    <span class="setting-desc">Enter a direct image URL (e.g. .jpg, .png).</span>
+                </div>
+                <input type="text" id="bg-input" placeholder="https://...">
+            </div>
+        </div>
+
+        <!-- Panic Section -->
+        <div class="settings-card">
+            <h3>Panic & Safety</h3>
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">Panic Key</span>
+                    <span class="setting-desc">Press this key to instantly redirect to Classroom.</span>
+                </div>
+                <input type="text" id="panic-input" placeholder="e.g. Escape or ~">
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-card" style="border-color: rgba(255, 77, 77, 0.2);">
+            <h3 style="color: #ff4d4d;">Danger Zone</h3>
+            <div class="setting-item">
+                <div class="setting-info">
+                    <span class="setting-label">Reset Data</span>
+                    <span class="setting-desc">This wipes all cookies, themes, and shortcuts.</span>
+                </div>
+                <button class="danger-btn" onclick="factoryReset()">Wipe Everything</button>
+            </div>
+        </div>
+
+        <!-- Save Bar -->
+        <div class="save-bar">
+            <button class="save-btn" onclick="saveAllSettings()">Save Settings</button>
+        </div>
+    </div>
+
+    <script>
+        function setCookie(name, value) {
+            const d = new Date();
+            d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
+        }
+
+        function getCookie(name) {
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(name + "=") == 0) return decodeURIComponent(c.substring(name.length + 1));
+            }
+            return null;
+        }
+
+        function goHome(e) {
+            e.preventDefault();
+            if (window.parent !== window.self) {
+                const homeBtn = window.parent.document.querySelector('[data-lw-action="home"]');
+                if (homeBtn) homeBtn.click();
+            } else { window.location.href = 'index.html'; }
+        }
+
+        function saveAllSettings() {
+            // 1. Get Values
+            const theme = document.getElementById('theme-select').value;
+            const engine = document.getElementById('engine-select').value;
+            const bgUrl = document.getElementById('bg-input').value;
+            const panic = document.getElementById('panic-input').value;
+
+            // 2. Save to Cookies
+            setCookie('lw-theme', theme);
+            setCookie('lw-engine', engine);
+            setCookie('lw-bg-url', bgUrl);
+            setCookie('lw-panic-key', panic);
+
+            // 3. Visual Feedback
+            const btn = document.querySelector('.save-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Saved!";
+            btn.style.background = "#10b981"; // Green
+
+            // 4. Apply to Parent & Reload
+            setTimeout(() => {
+                window.parent.location.reload();
+            }, 800);
+        }
+
+        function factoryReset() {
+            if(confirm("Are you sure? This will delete all your hard work!")) {
+                ['lw-theme', 'lw-engine', 'lw-bg-url', 'lw-panic-key', 'lw_shortcuts'].forEach(c => {
+                    document.cookie = `${c}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                });
+                window.parent.location.reload();
+            }
+        }
+
+        window.onload = () => {
+            if (getCookie('lw-theme')) document.getElementById('theme-select').value = getCookie('lw-theme');
+            if (getCookie('lw-engine')) document.getElementById('engine-select').value = getCookie('lw-engine');
+            if (getCookie('lw-bg-url')) document.getElementById('bg-input').value = getCookie('lw-bg-url');
+            if (getCookie('lw-panic-key')) document.getElementById('panic-input').value = getCookie('lw-panic-key');
+        };
+    </script>
+</body>
+</html>

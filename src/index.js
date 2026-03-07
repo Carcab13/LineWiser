@@ -50,6 +50,7 @@ fastify.register(fastifyStatic, {
 	root: libcurlPath,
 	prefix: "/libcurl/",
 	decorateReply: false,
+  sslVerIfyPeer: false,
 });
 
 fastify.register(fastifyStatic, {
@@ -88,7 +89,7 @@ function shutdown() {
 
 let port = parseInt(process.env.PORT || "");
 
-if (isNaN(port)) port = 9910;
+if (isNaN(port)) port = 1111;
 
 fastify.listen({
 	port: port,

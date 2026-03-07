@@ -267,6 +267,7 @@ html.lw-sidebar-collapsed .lw-side-label {
 html.lw-sidebar-collapsed .lw-side-brand {
 	margin-left: auto;
 	margin-right: auto;
+  display: none;
 }
 
 html.lw-sidebar-collapsed .lw-side-top {
@@ -289,6 +290,7 @@ html.lw-sidebar-collapsed .lw-side-toggle {
 	border: 1px solid rgba(138, 180, 248, 0.35);
 	font-weight: 700;
 	letter-spacing: 0.03em;
+  cursor: cursor;
 	user-select: none;
 }
 
@@ -646,4 +648,75 @@ footer a:hover {
 
 .credit input:checked ~ pre {
 	display: block;
+}
+
+.lw-shortcuts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.lw-shortcut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lw-shortcut:hover {
+    transform: translateY(-5px);
+}
+
+.lw-shortcut-icon {
+    width: 54px;
+    height: 54px;
+    background: rgba(255, 255, 255, 0.05); /* Subtle glass look */
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+.lw-shortcut:hover .lw-shortcut-icon {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(138, 180, 248, 0.4);
+}
+
+.lw-shortcut-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-active);
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lw-shortcut-del {
+    position: absolute;
+    top: -6px;
+    right: 6px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    display: none;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.lw-shortcut:hover .lw-shortcut-del {
+    display: block;
 }

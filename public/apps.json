@@ -2,7 +2,7 @@
   {
     "name": "CrazyGames",
     "url": "https://www.crazygames.com/",
-    "image": "./imgs/crazygames.jpeg",
+    "image": "./imgs/crazygames.webp",
     "categories": ["all"]
   },
   {
@@ -299,13 +299,13 @@
   {
     "name": "Grammarly Plagiarism Checker",
     "url": "https://www.grammarly.com/plagiarism-checker",
-    "image": "./imgs/gm.png",
+    "image": "./imgs/gm.webp",
     "categories": ["all", "pc"]
   },
   {
     "name": "Plagiarism Detector",
     "url": "https://plagiarismdetector.net/",
-    "image": "./imgs/pdn.png",
+    "image": "./imgs/pdn.webp",
     "categories": ["all", "pc"]
   },
   {
@@ -317,31 +317,31 @@
   {
     "url": "https://netflix.com",
     "name": "Netflix",
-    "image": "./imgs/netflix.png"
+    "image": "./imgs/netflix.webp"
   },
   {
     "url": "http://primevideo.com",
     "name": "Prime Video",
-    "image": "./imgs/prime.png"
+    "image": "./imgs/prime.webp"
   },
   {
     "url": "https://www.disneyplus.com",
     "name": "Disney Plus",
-    "image": "./imgs/disney.png"
+    "image": "./imgs/disney.webp"
   },
   {
     "url": "https://www.tiktok.com",
     "name": "Tiktok",
-    "image": "./imgs/tiktok.png"
+    "image": "./imgs/tiktok.webp"
   },
   {
     "url": "https://www.bandlab.com/login",
     "name": "BandLab",
-    "image": "./imgs/bandlab.png"
+    "image": "./imgs/bandlab.webp"
   },
   {
     "url": "https://www.gauthmath.com",
     "name": "Gauth Math",
-    "image": "./imgs/gauthmath.png"
+    "image": "./imgs/gauthmath.webp"
   }
 ]

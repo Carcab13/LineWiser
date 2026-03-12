@@ -873,5 +873,10 @@
     "name": "Ovo (Modded)",
     "url": "https://arjun99ab.github.io/ovo/1.4.5/",
     "image": "./imgs/ovo.webp"
-  }
+  },
+  {
+    "name": "Jelly Mario",
+    "url": "https://jellymar.io",
+    "image": "./imgs/Mario.webp"
+  } 
 ]

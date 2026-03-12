@@ -20,6 +20,7 @@ Object.assign(wisp.options, {
 	dns_servers: ["1.1.1.3", "1.0.0.3"],
 });
 
+
 const fastify = Fastify({
 	serverFactory: (handler) => {
 		return createServer()
@@ -35,6 +36,8 @@ const fastify = Fastify({
 	},
 });
 
+
+
 fastify.register(fastifyStatic, {
 	root: publicPath,
 	decorateReply: true,
@@ -44,6 +47,10 @@ fastify.register(fastifyStatic, {
 	root: scramjetPath,
 	prefix: "/scram/",
 	decorateReply: false,
+  setHeaders: (res) => {
+            // This allows the SW to control pages outside the /scram/ directory
+            res.setHeader("Service-Worker-Allowed", "/");
+        }
 });
 
 fastify.register(fastifyStatic, {

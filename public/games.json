@@ -878,5 +878,10 @@
     "name": "Jelly Mario",
     "url": "https://jellymar.io",
     "image": "./imgs/Mario.webp"
-  } 
+  },
+    {
+    "name": "Neal.fun",
+    "url": "https://neal.fun",
+    "image": "./imgs/Screenshot 2026-03-24 191930.png"
+  }
 ]
